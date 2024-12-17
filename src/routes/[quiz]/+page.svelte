@@ -21,6 +21,7 @@
 		let solution = data.questions[currentQuestion].answer;
 		if (selectedAnswer === solution) {
 			score++;
+			localStorage.setItem('score', score);
 		}
 		submitted = true;
 	}
@@ -29,7 +30,23 @@
 		selectedAnswer = '';
 		currentQuestion++;
 		$progress++;
+		localStorage.setItem('currentQuestion', currentQuestion);
 	}
+
+	function restart() {
+		localStorage.setItem('score', 0);
+		localStorage.setItem('currentQuestion', 0);
+		localStorage.setItem('progress', 1);
+		window.location.reload();
+	}
+
+	$effect(() => {
+		if (localStorage.getItem('score')) score = parseInt(localStorage.getItem('score'));
+		if (localStorage.getItem('currentQuestion'))
+			currentQuestion = parseInt(localStorage.getItem('currentQuestion'));
+		if (localStorage.getItem('progress'))
+			$progress = Number(localStorage.getItem('currentQuestion')) + 1;
+	});
 </script>
 
 {#if currentQuestion < data.questions.length}
@@ -66,5 +83,5 @@
 {:else}
 	<p>Game Over!</p>
 	<p>You scored {score} out of {data.questions.length}!</p>
-	<button class="btn btn-primary" onclick={window.location.reload()}>Play again!</button>
+	<button class="btn btn-primary" onclick={restart}>Play again!</button>
 {/if}
